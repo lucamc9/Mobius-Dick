@@ -31,7 +31,7 @@ class WOA:
         conv_curve = np.zeros(self.max_iter)
         while t < self.max_iter:
             fitness, self.positions, self.leader_score, self.leader_pos = self.get_fitness(self.positions, self.leader_score, self.leader_pos)
-            a_1 =  t * (2 / self.max_iter)
+            a_1 =  2 - t * (2 / self.max_iter)
             a_2 = -1 + t * (-1 / self.max_iter)
             self.positions = self.update_search_pos(self.positions, self.leader_pos, a_1, a_2)
             conv_curve[t] = self.leader_score
@@ -43,14 +43,12 @@ class WOA:
         for i in range(positions.shape[0]):
             # adjust agents surpassing bounds
             upper_flag = positions[i,:] > self.upper_b
-            lower_flag = positions[i,:] > self.lower_b
+            lower_flag = positions[i,:] < self.lower_b
             positions[i,:] = positions[i,:] * ((upper_flag + lower_flag) < 1) + self.upper_b * upper_flag + self.lower_b * lower_flag
             # objective function
             fitness = self.bench_f.get_fitness(positions[i,:])
-            print('Fitness = {}'.format(fitness))
             # update leader
             if fitness < leader_score: # change to > if maximizing
-                print('Changing fitness')
                 leader_score = fitness
                 leader_pos = positions[i,:]
 
@@ -79,5 +77,4 @@ class WOA:
                 else:
                     dist_to_leader = np.abs(leader_pos[j] - positions[i, j])                                 # Eq. (2.5)
                     positions[i, j] = dist_to_leader * np.exp(b * l) * np.cos(l * 2 * np.pi) + leader_pos[j]
-
         return positions
