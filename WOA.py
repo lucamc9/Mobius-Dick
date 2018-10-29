@@ -1,5 +1,5 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 class WOA:
 
     def __init__(self, n_agents, max_iter, lower_b, upper_b, dim, bench_f):
@@ -35,8 +35,10 @@ class WOA:
             a_2 = -1 + t * (-1 / self.max_iter)
             self.positions = self.update_search_pos(self.positions, self.leader_pos, a_1, a_2)
             conv_curve[t] = self.leader_score
-            print('iter = {} leader_score = {}'.format(t, self.leader_score))
+            #print('iter = {} leader_score = {}'.format(t, self.leader_score))
             t += 1
+            #plt.scatter(self.positions[:,0], self.positions[:,1])
+            #plt.show()
         return self.leader_score, self.positions, conv_curve
 
     def get_fitness(self, positions, leader_score, leader_pos):
