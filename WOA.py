@@ -48,7 +48,9 @@ class WOA:
             lower_flag = positions[i,:] < self.lower_b
             positions[i,:] = positions[i,:] * ((upper_flag + lower_flag) < 1) + self.upper_b * upper_flag + self.lower_b * lower_flag
             # objective function
+            # import pdb; pdb.set_trace()
             fitness = self.bench_f.get_fitness(positions[i,:])
+            print(fitness)
             # update leader
             if fitness < leader_score: # change to > if maximizing
                 leader_score = fitness
