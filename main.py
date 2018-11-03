@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 
 n_agents = 30
-func_name = 'F3'
+func_name = 'F22'
 max_iter = 500
 lower_b, upper_b, dim, bench_f = get_function_details(func_name)
 
