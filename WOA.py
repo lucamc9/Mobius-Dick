@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 class WOA:
 
     def __init__(self, n_agents, max_iter, lower_b, upper_b, dim, bench_f):
@@ -37,9 +38,11 @@ class WOA:
             conv_curve[t] = self.leader_score
             #print('iter = {} leader_score = {}'.format(t, self.leader_score))
             t += 1
-            #plt.scatter(self.positions[:,0], self.positions[:,1])
+            plt.scatter(self.positions[:,0], self.positions[:,1])
+            plt.pause(0.05)
             #plt.show()
-        return self.leader_score, self.positions, conv_curve
+
+        return self.leader_score, self.leader_pos, conv_curve
 
     def get_fitness(self, positions, leader_score, leader_pos):
         for i in range(positions.shape[0]):
@@ -50,7 +53,7 @@ class WOA:
             # objective function
             # import pdb; pdb.set_trace()
             fitness = self.bench_f.get_fitness(positions[i,:])
-            print(fitness)
+            #print(fitness)
             # update leader
             if fitness < leader_score: # change to > if maximizing
                 leader_score = fitness

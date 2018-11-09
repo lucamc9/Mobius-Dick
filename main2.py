@@ -1,6 +1,6 @@
-from utils import * 
-from WOA import WOA # comment and uncomment below to test your version
-#from WOA_hoog import WOA
+from utils import *
+#from WOA import WOA # comment and uncomment below to test your version
+from WOA_hoog import WOA
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import numpy as np
