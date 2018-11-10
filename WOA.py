@@ -1,6 +1,5 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import time
 class WOA:
 
     def __init__(self, n_agents, max_iter, lower_b, upper_b, dim, bench_f):
@@ -30,19 +29,17 @@ class WOA:
     def forward(self):
         t = 0
         conv_curve = np.zeros(self.max_iter)
+        A_arr_final = []
         while t < self.max_iter:
             fitness, self.positions, self.leader_score, self.leader_pos = self.get_fitness(self.positions, self.leader_score, self.leader_pos)
             a_1 =  2 - t * (2 / self.max_iter)
             a_2 = -1 + t * (-1 / self.max_iter)
+
             self.positions = self.update_search_pos(self.positions, self.leader_pos, a_1, a_2)
             conv_curve[t] = self.leader_score
-            #print('iter = {} leader_score = {}'.format(t, self.leader_score))
             t += 1
-            plt.scatter(self.positions[:,0], self.positions[:,1])
-            plt.pause(0.05)
-            #plt.show()
 
-        return self.leader_score, self.leader_pos, conv_curve
+        return self.leader_score, self.positions, conv_curve
 
     def get_fitness(self, positions, leader_score, leader_pos):
         for i in range(positions.shape[0]):
@@ -51,9 +48,7 @@ class WOA:
             lower_flag = positions[i,:] < self.lower_b
             positions[i,:] = positions[i,:] * ((upper_flag + lower_flag) < 1) + self.upper_b * upper_flag + self.lower_b * lower_flag
             # objective function
-            # import pdb; pdb.set_trace()
             fitness = self.bench_f.get_fitness(positions[i,:])
-            #print(fitness)
             # update leader
             if fitness < leader_score: # change to > if maximizing
                 leader_score = fitness
@@ -61,7 +56,10 @@ class WOA:
 
         return fitness, positions, leader_score, leader_pos
 
-    def update_search_pos(self, positions, leader_pos, a_1, a_2):
+    def update_search_pos(self, positions_, leader_pos_, a_1, a_2):
+
+        positions = positions_.copy()
+        leader_pos = leader_pos_.copy()
         for i in range(positions.shape[0]):
             r_1 = np.random.rand()
             r_2 = np.random.rand()
@@ -70,18 +68,20 @@ class WOA:
             b = 1
             l = (a_2 - 1) * np.random.rand() + 1
             p = np.random.rand()    # p in Eq. (2.6)
-
             for j in range(positions.shape[1]):
+
                 if p < 0.5:
                     if np.abs(A) >= 1:
                         rand_leader_idx = int(np.floor(self.n_agents * np.random.rand()))
                         x_rand = positions[rand_leader_idx, :]
-                        d_x_rand = np.abs(C * x_rand[j] - positions[i, j])                                   # Eq. (2.7)
-                        positions[i, j] = x_rand[j] - A * d_x_rand                                           # Eq. (2.8)
+                        d_x_rand = np.abs(C * x_rand[j] - positions[i, j])  # Eq. (2.7)
+                        positions[i, j] = x_rand[j] - A * d_x_rand
                     else:
-                        d_leader = np.abs(C * leader_pos[j] - positions[i, j])                               # Eq. (2.1)
-                        positions[i, j] = leader_pos[j] - A * d_leader                                       # Eq. (2.2)
+                        d_leader = np.abs(C * leader_pos[j] - positions[i, j]) # Eq. (2.1)
+                        positions[i, j] = leader_pos[j] - A * d_leader
+
                 else:
-                    dist_to_leader = np.abs(leader_pos[j] - positions[i, j])                                 # Eq. (2.5)
+                    dist_to_leader = np.abs(leader_pos[j] - positions[i, j]) # Eq. (2.5)
                     positions[i, j] = dist_to_leader * np.exp(b * l) * np.cos(l * 2 * np.pi) + leader_pos[j]
+
         return positions

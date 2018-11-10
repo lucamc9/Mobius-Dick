@@ -87,7 +87,7 @@ class Bench_Function:
             c_sh = np.array([.1, .2, .2, .4, .4, .6, .3, .7, .5, .5])
             fitness = 0
             for i in range(7):
-                # fitness -= np.linalg.inv(np.dot((x-a_sh[i,:]), np.transpose((x-a_sh[i,:]))) + c_sh[i])
+                # fitness -= np.linalg.inv(np.dot((x-a_sh[i,:]), np.transpose((x-a_sh[i,:]))) + c_sh[i]) for matrices, not scalars
                 fitness -= (np.dot((x-a_sh[i,:]), np.transpose((x-a_sh[i,:]))) + c_sh[i])**(-1)
 
 
