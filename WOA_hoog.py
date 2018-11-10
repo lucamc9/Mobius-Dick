@@ -58,8 +58,10 @@ class WOA:
 
         return fitness, positions, leader_score, leader_pos
 
-    def update_search_pos(self, positions, leader_pos, a_1, a_2):
-        for i in range(positions.shape[0]):
+    def update_search_pos(self, positions_, leader_pos_, a_1, a_2):
+        positions = positions_.copy()
+        leader_pos = leader_pos_.copy()
+	for i in range(positions.shape[0]):
             r_1 = np.random.rand()
             r_2 = np.random.rand()
             A = r_1 * a_1 # Eq. (2.3)
