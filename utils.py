@@ -1,6 +1,17 @@
+"""
+NAT - Assignment2
+Luca G.McArthur s14422321
+Gabriel Hoogervorst s1505156
+
+This script defines the benchmark functions that will serve as fitness functions
+for WOA.
+
+"""
+
 import numpy as np
 
 def get_function_details(func_name):
+
     if func_name == 'F1':
         lower_b = -100
         upper_b = 100
@@ -28,6 +39,7 @@ def get_function_details(func_name):
     return lower_b, upper_b, dim, bench_f
 
 def get_function_details_2D(func_name):
+
     if func_name == 'F1':
         lower_b = -100
         upper_b = 100
@@ -87,7 +99,6 @@ class Bench_Function:
             c_sh = np.array([.1, .2, .2, .4, .4, .6, .3, .7, .5, .5])
             fitness = 0
             for i in range(7):
-                # fitness -= np.linalg.inv(np.dot((x-a_sh[i,:]), np.transpose((x-a_sh[i,:]))) + c_sh[i]) for matrices, not scalars
                 fitness -= (np.dot((x-a_sh[i,:]), np.transpose((x-a_sh[i,:]))) + c_sh[i])**(-1)
 
 

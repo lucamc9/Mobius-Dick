@@ -1,6 +1,16 @@
+"""
+NAT - Assignment2
+Luca G.McArthur s14422321
+Gabriel Hoogervorst s1505156
+
+This script runs the Whale Optimization Algorithm for a given set of parameters.
+
+"""
+
 from utils import *
-from WOA import WOA # comment and uncomment below to test your version
-#from WOA_hoog import WOA
+from WOA import WOA
+from WOA_conceptual import WOA_conceptual
+from WOA_mathematical import WOA_mathematical
 import matplotlib.pyplot as plt
 import matplotlib.ticker as mtick
 import numpy as np
@@ -11,31 +21,17 @@ max_iter = 500
 n_runs = 30
 func_names = ['F3', 'F10', 'F22']
 
-# lower_b, upper_b, dim, bench_f = get_function_details_2D(func_name)
-# best_scores = np.zeros(iters)
-# for i in range (iters):
-#     woa = WOA(n_agents, max_iter, lower_b, upper_b, dim, bench_f)
-#     best_score, best_pos, conv_curve = woa.forward()
-#     print(best_score)
-#     print(best_pos)
-#     print("\n")
-#     best_scores[i] = best_score
-#     print(i)
-    # for j in range (3):
-    #    print(woa.q.count(j+1))
-    #print('Best solution found by WOA: {}'.format(best_score))
-# ave = np.average(best_scores)
-# std = np.std(best_scores)
-# print('Average = {}, std = {}'.format(ave,std))
-
+# compute the scores for each function
 for func_name in func_names:
        scores = []
        lower_b, upper_b, dim, bench_f = get_function_details(func_name)
+
        for i in range(n_runs):
-              woa = WOA(n_agents, max_iter, lower_b, upper_b, dim, bench_f)
-              best_score, best_pos, conv_curve = woa.forward()
-              print('Best solution found by WOA run {}: {}'.format(i, best_score))
-              scores.append(best_score)
+          # to run an alternative implementation simply call WOA_conceptual/WOA_mathematical
+          woa = WOA(n_agents, max_iter, lower_b, upper_b, dim, bench_f)
+          best_score, best_pos, conv_curve = woa.forward()
+          print('Best solution found by WOA at run {}: {}'.format(i, best_score))
+          scores.append(best_score)
 
        print('Function: {} -> ave = {}, std = {}'.format(func_name, np.mean(scores), np.std(scores)))
 

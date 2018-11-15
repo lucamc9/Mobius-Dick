@@ -1,5 +1,15 @@
+"""
+NAT - Assignment2
+Luca G.McArthur s14422321
+Gabriel Hoogervorst s1505156
+
+This script defines the conceptual interpretation of the WOA class.
+
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
+
 class WOA_conceptual:
 
     def __init__(self, n_agents, max_iter, lower_b, upper_b, dim, bench_f):
@@ -12,7 +22,7 @@ class WOA_conceptual:
         self.bench_f = bench_f
         # init problem
         self.leader_pos = np.zeros(dim)
-        self.leader_score = np.inf  # change to -inf if maximizing
+        self.leader_score = np.inf  
         self.positions = self.initialize_pos(n_agents, dim, upper_b, lower_b)
 
 
@@ -35,7 +45,6 @@ class WOA_conceptual:
             a_2 = -1 + t * (1 / self.max_iter)
             self.positions = self.update_search_pos(self.positions, self.leader_pos, a_1, a_2)
             conv_curve[t] = self.leader_score
-            #print('iter = {} leader_score = {}'.format(t, self.leader_score))
             t += 1
         return self.leader_score, self.leader_pos, conv_curve
 
@@ -46,11 +55,9 @@ class WOA_conceptual:
             lower_flag = positions[i,:] < self.lower_b
             positions[i,:] = positions[i,:] * ((upper_flag + lower_flag) < 1) + self.upper_b * upper_flag + self.lower_b * lower_flag
             # objective function
-            # import pdb; pdb.set_trace()
             fitness = self.bench_f.get_fitness(positions[i,:])
-            #print(fitness)
             # update leader
-            if fitness < leader_score: # change to > if maximizing
+            if fitness < leader_score:
                 leader_score = fitness
                 leader_pos = positions[i,:]
 
@@ -62,23 +69,22 @@ class WOA_conceptual:
         for i in range(positions.shape[0]):
             r_1 = np.random.rand()
             r_2 = np.random.rand()
-            A = r_1 * a_1 # Eq. (2.3)
+            A = r_1 * a_1             # Eq. (2.3)
             b = 1
-            #l = a_2 * np.random.rand()
             l = -1 * np.random.rand()
-            p = np.random.rand()    # p in Eq. (2.6)
+            p = np.random.rand()      # p in Eq. (2.6)
 
             for j in range(positions.shape[1]):
                 if p < 0.5:
                     if np.abs(A) >= 1:
                         rand_leader_idx = int(np.floor(self.n_agents * np.random.rand()))
                         x_rand = positions[rand_leader_idx, :]
-                        d_x_rand = positions[i, j] - x_rand[j]                          # Eq. (2.7)
-                        positions[i, j] = x_rand[j] + A * d_x_rand                                          # Eq. (2.8)
+                        d_x_rand = positions[i, j] - x_rand[j]                      # Eq. (2.7)
+                        positions[i, j] = x_rand[j] + A * d_x_rand                  # Eq. (2.8)
                     else:
                         d_X = positions[i, j] - leader_pos[j]                       # Eq. (2.1)
-                        positions[i, j] = leader_pos[j] + A * d_X                                     # Eq. (2.2)
+                        positions[i, j] = leader_pos[j] + A * d_X                   # Eq. (2.2)
                 else:
-                    dist_to_leader = positions[i, j] - leader_pos[j]                                  # Eq. (2.5)
+                    dist_to_leader = positions[i, j] - leader_pos[j]                # Eq. (2.5)
                     positions[i, j] = dist_to_leader * np.exp(b * l) * np.cos(l * 2 * np.pi) + leader_pos[j]
         return positions

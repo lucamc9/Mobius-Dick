@@ -1,5 +1,15 @@
+"""
+NAT - Assignment2
+Luca G.McArthur s14422321
+Gabriel Hoogervorst s1505156
+
+This script defines the mathematical interpretation of the WOA class.
+
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
+
 class WOA_mathematical:
 
     def __init__(self, n_agents, max_iter, lower_b, upper_b, dim, bench_f):
@@ -12,7 +22,7 @@ class WOA_mathematical:
         self.bench_f = bench_f
         # init problem
         self.leader_pos = np.zeros(dim)
-        self.leader_score = np.inf  # change to -inf if maximizing
+        self.leader_score = np.inf
         self.positions = self.initialize_pos(n_agents, dim, upper_b, lower_b)
 
 
@@ -56,7 +66,6 @@ class WOA_mathematical:
         return fitness, positions, leader_score, leader_pos
 
     def update_search_pos(self, positions_, leader_pos_, a_1, a_2):
-
         positions = positions_.copy()
         leader_pos = leader_pos_.copy()
         for i in range(positions.shape[0]):
@@ -73,14 +82,14 @@ class WOA_mathematical:
                     if np.abs(A) >= 1:
                         rand_leader_idx = int(np.floor(self.n_agents * np.random.rand()))
                         x_rand = positions[rand_leader_idx, :]
-                        d_x_rand = np.abs(C * x_rand[j] - positions[i, j])  # Eq. (2.7)
+                        d_x_rand = np.abs(C * x_rand[j] - positions[i, j])     # Eq. (2.7)
                         positions[i, j] = x_rand[j] - A * d_x_rand
                     else:
                         d_leader = np.abs(C * leader_pos[j] - positions[i, j]) # Eq. (2.1)
                         positions[i, j] = leader_pos[j] - A * d_leader
 
                 else:
-                    dist_to_leader = np.abs(leader_pos[j] - positions[i, j]) # Eq. (2.5)
+                    dist_to_leader = np.abs(leader_pos[j] - positions[i, j])   # Eq. (2.5)
                     positions[i, j] = dist_to_leader * np.exp(b * l) * np.cos(l * 2 * np.pi) + leader_pos[j]
 
         return positions
