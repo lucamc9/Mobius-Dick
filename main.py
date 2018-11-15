@@ -5,6 +5,7 @@ Gabriel Hoogervorst s1505156
 
 This script runs the Whale Optimization Algorithm for a given set of parameters.
 
+Code for the oiriginal implementation can be found at http://www.alimirjalili.com/WOA.html 
 """
 
 from utils import *
